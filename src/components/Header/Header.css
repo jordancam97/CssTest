@@ -1,0 +1,18 @@
+
+
+.header {
+  background: #222626;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  padding: 0 100px;
+}
+
+.header_text {
+  font-family: "DM Serif Display", serif !important;
+  font-weight: 400;
+  font-style: italic;
+  font-weight: 700;
+  color: #ffd030;
+  font-size: 25px;
+}
