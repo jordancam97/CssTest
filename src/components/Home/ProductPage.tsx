@@ -1,17 +1,28 @@
-import { Button, Grid, Slide, Zoom } from "@mui/material";
-import Fade from "@mui/material/Fade";
-import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
+import { Button, Grid, Slide, Zoom, Typography } from "@mui/material";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
+import ModalCarousel from "../Modal/ModalCarousel.tsx";
 import "./ProductPage.css";
-import ModalOpen from '../Modal/ModalOpen.tsx';
+import ModalOpen from "../Modal/ModalOpen.tsx"
 
 const ProductPage = () => {
-  const [modalOpen, setModalOpen] = useState(false); 
+  const [modalOpen, setModalOpen] = useState(false);
+  const [carouselOpen, setCarouselOpen] = useState(false);
 
   const handleOpenModal = () => {
     setModalOpen(true);
   };
+
+  const images = [
+    "/assets/images/air-max-1.png",
+    "/assets/images/air-max-2.png",
+    "/assets/images/air-max-3.png",
+    "/assets/images/air-max-4.png",
+    "/assets/images/air-max-5.png",
+    "/assets/images/air-max-6.png",
+    "/assets/images/air-max-7.png",
+    
+  ];
 
   return (
     <Grid container mt={0} className="container" spacing={2}>
@@ -23,8 +34,8 @@ const ProductPage = () => {
           paddingLeft: "137px !important",
           display: "flex",
           flexDirection: "column",
-          paddingTop:"0px !important",
-          justifyContent:"center"
+          paddingTop: "0px !important",
+          justifyContent: "center",
         }}
       >
         <Slide
@@ -58,11 +69,12 @@ const ProductPage = () => {
           </Typography>
         </Zoom>
         <Typography className="container_text">
-            US$275
-          </Typography>
+          US$275
+        </Typography>
         <Button size="large" className="container_button" variant="contained" onClick={handleOpenModal}>
           Buy Now
         </Button>
+        {/* Modal para otros detalles del producto */}
         <ModalOpen open={modalOpen} handleClose={() => setModalOpen(false)} />
         <Grid container className="container_info">
           <Grid
@@ -78,7 +90,7 @@ const ProductPage = () => {
             }}
           >
             <Typography className="container_infoOne">90k+</Typography>
-            <Typography className="container_infoText">Colletions</Typography>
+            <Typography className="container_infoText">Collections</Typography>
           </Grid>
           <Grid
             xs={6}
@@ -113,14 +125,14 @@ const ProductPage = () => {
           className="img_letter"
         >
           NIKE
-          <Fade in={true} timeout={1000}>
-            <img
-              className="img_nike"
-              src="/assets/images/air-max.png"
-              alt="Air Max"
-            />
-          </Fade>
+          <img
+            className="img_nike"
+            src="/assets/images/air-max.png"
+            alt="Air Max"
+            onClick={() => setCarouselOpen(true)}
+          />
         </Typography>
+        <ModalCarousel open={carouselOpen} handleClose={() => setCarouselOpen(false)} images={images} />
 
         <Grid container className="container_stars">
           <Grid
