@@ -20,9 +20,11 @@ const ProductPage = () => {
         xs={5}
         sx={{
           textAlign: "left",
-          padding: "25px 0px 60px 137px !important",
+          paddingLeft: "137px !important",
           display: "flex",
           flexDirection: "column",
+          paddingTop:"0px !important",
+          justifyContent:"center"
         }}
       >
         <Slide
