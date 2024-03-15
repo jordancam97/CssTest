@@ -1,0 +1,35 @@
+.columnLeft {
+  justify-content: end;
+  display: flex;
+  align-items: center;
+  background: transparent;
+}
+
+.columnLeft_content {
+  background: #878e88;
+  width: 100%;
+  height: 80%;
+  border-radius: 18px 0px 0px 18px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column !important;
+  align-items: center;
+}
+
+.columnLeft_contentImg {
+  transform: rotate(-20deg);
+  object-fit: contain;
+  width: 255px;
+}
+
+.columnLeft_contentText {
+  margin-top: 40px !important;
+  color: #191919;
+  text-align: center;
+  line-height: 18px !important;
+}
+
+.columnRight {
+  background: white;
+  border-radius: 18px;
+}
