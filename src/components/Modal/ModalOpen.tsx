@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import {
   Modal,
   Typography,
@@ -10,6 +11,7 @@ import {
   Button,
 } from "@mui/material";
 import { Close, ArrowBack } from "@mui/icons-material";
+import TextField from "@mui/material/TextField";
 
 import "./ModalOpen.css";
 import FormControl from "@mui/material/FormControl";
@@ -19,12 +21,14 @@ import LinearProgress from "@mui/material/LinearProgress";
 import TaskAltRoundedIcon from "@mui/icons-material/TaskAltRounded";
 import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
 
+
 const ModalOpen = ({ open, handleClose, selectedSize, quantity }) => {
   const totalAmount = quantity * 275;
   const [transactionSuccess, setTransactionSuccess] = useState(false);
   const [transactionFailed, setTransactionFailed] = useState(false);
   const [transactionInProgress, setTransactionInProgress] = useState(false);
   const [transactionId, setTransactionId] = useState("");
+  const [nameValid, setNameValid] = useState(false); // Estado para validar el nombre
 
   useEffect(() => {
     setTransactionSuccess(false);
@@ -44,7 +48,8 @@ const ModalOpen = ({ open, handleClose, selectedSize, quantity }) => {
   };
 
   const handlePay = () => {
-    // Espacio logica de pago
+    if (!nameValid) return; // No permite continuar si el nombre no es válido
+    // Espacio lógica de pago
 
     setTransactionInProgress(true); // Indica que la transacción está en curso
     const transactionSuccess = true; // Cambiar a false para simular una transacción fallida
@@ -71,6 +76,16 @@ const ModalOpen = ({ open, handleClose, selectedSize, quantity }) => {
     }, 500);
   };
 
+  const [value, setValue] = useState<string>("");
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = event.target.value;
+    // Expresión regular para aceptar solo letras (mayúsculas y minúsculas) y espacios
+    const onlyLettersRegex = /^[a-zA-Z\s]*$/;
+    if (onlyLettersRegex.test(inputValue) || inputValue === "") {
+      setValue(inputValue);
+    }
+  };
   return (
     <Modal
       open={open}
@@ -185,15 +200,13 @@ const ModalOpen = ({ open, handleClose, selectedSize, quantity }) => {
                       <Typography variant="h6" gutterBottom>
                         Payment Details
                       </Typography>
-                      <FormControl variant="standard">
-                        <InputLabel
-                          htmlFor="component-simple"
-                          style={{ color: "#392c00" }}
-                        >
-                          Name
-                        </InputLabel>
-                        <Input id="component-simple" />
-                      </FormControl>
+                      <TextField
+                        id="standard-basic"
+                        label="Name"
+                        variant="standard"
+                        value={value}
+                        onChange={handleChange}
+                      />
                       <FormControl variant="standard">
                         <InputLabel
                           htmlFor="visa-input"
