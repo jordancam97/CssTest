@@ -7,13 +7,12 @@ import { Close } from "@mui/icons-material";
 
 const ModalCarousel = ({ open, handleClose, images }) => {
   const settings = {
-    dots: true,
+    dots: false,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    swipe: false,
-    adaptiveHeight: true,
+    swipe: true,
   };
 
   return (

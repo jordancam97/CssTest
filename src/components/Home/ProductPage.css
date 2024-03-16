@@ -32,6 +32,7 @@
   border-radius: 25px !important;
   width: 169px !important;
   font-weight: 700 !important;
+  line-height: 18px !important;
 }
 
 .container_info {
@@ -89,9 +90,8 @@
 .container_stars {
   width: 190px !important;
   margin-left: 160px;
-  margin-top: -54px;
-  display: flex;
-  justify-content: center;
+  margin-top: -79px;
+
 }
 
 .container_starsText {
@@ -100,8 +100,5 @@
 }
 
 .container_starsInfo {
-  color: #a8a8a8 !important;
-  font-weight: bold !important;
-  font-size: 14px !important;
   margin-top: 8px !important;
 }

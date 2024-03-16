@@ -3,7 +3,10 @@ import { Button, Grid, Slide, Zoom, Typography } from "@mui/material";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import ModalCarousel from "../Modal/ModalCarousel.tsx";
 import "./ProductPage.css";
-import ModalOpen from "../Modal/ModalOpen.tsx"
+import ModalOpen from "../Modal/ModalOpen.tsx";
+import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import ToggleButton from "@mui/material/ToggleButton";
 
 const ProductPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -21,8 +24,9 @@ const ProductPage = () => {
     "/assets/images/air-max-5.png",
     "/assets/images/air-max-6.png",
     "/assets/images/air-max-7.png",
-    
   ];
+
+  const [selectedSize, setSelectedSize] = useState<number | null>(null);
 
   return (
     <Grid container mt={0} className="container" spacing={2}>
@@ -68,11 +72,16 @@ const ProductPage = () => {
             seen before
           </Typography>
         </Zoom>
-        <Typography className="container_text">
-          US$275
-        </Typography>
-        <Button size="large" className="container_button" variant="contained" onClick={handleOpenModal}>
-          Buy Now
+        <Typography className="container_text">US$275</Typography>
+        <Button
+          size="large"
+          className="container_button"
+          variant="contained"
+          onClick={handleOpenModal}
+          startIcon={<CreditCardOutlinedIcon />}
+        >
+          Pay with <br />
+          credit card
         </Button>
         {/* Modal para otros detalles del producto */}
         <ModalOpen open={modalOpen} handleClose={() => setModalOpen(false)} />
@@ -132,44 +141,63 @@ const ProductPage = () => {
             onClick={() => setCarouselOpen(true)}
           />
         </Typography>
-        <ModalCarousel open={carouselOpen} handleClose={() => setCarouselOpen(false)} images={images} />
+        <ModalCarousel
+          open={carouselOpen}
+          handleClose={() => setCarouselOpen(false)}
+          images={images}
+        />
 
         <Grid container className="container_stars">
           <Grid
             xs={3}
             sx={{
-              borderColor: "#a8a8a8 !important",
-              borderRight: "solid",
-              borderRightWidth: "0.2px",
-              height: "15px",
-              display: "flex",
-              justifyContent: "center",
-              flexDirection: "column",
-              textAlign: "right",
-              paddingRight: 0.7,
+              textAlign: "left",
             }}
           >
-            <Typography className="container_starsText">4.9</Typography>
+            <Typography className="container_starsText">Sizes</Typography>
           </Grid>
-          <Grid
-            xs={9}
-            sx={{
-              borderColor: "#a8a8a8 !important",
-              height: "12px",
-              display: "flex",
-              alignItems: "center",
-              paddingLeft: 0.5,
-            }}
-          >
-            <StarRoundedIcon sx={{ color: "#ffd030" }} />
-            <StarRoundedIcon sx={{ color: "#ffd030" }} />
-            <StarRoundedIcon sx={{ color: "#ffd030" }} />
-            <StarRoundedIcon sx={{ color: "#ffd030" }} />
-            <StarRoundedIcon sx={{ color: "#ffd030" }} />
-          </Grid>
-          <Typography className="container_starsInfo" sx={{}}>
-            200k Total Review
-          </Typography>
+          <ButtonGroup color="inherit">
+            <Button
+              aria-label="38"
+              style={{
+                backgroundColor: selectedSize === 38 ? "#ffd030" : "inherit",
+                color: "white",
+              }}
+              onClick={() => setSelectedSize(38)}
+            >
+              38
+            </Button>
+            <Button
+              aria-label="39"
+              style={{
+                backgroundColor: selectedSize === 39 ? "#ffd030" : "inherit",
+                color: "white",
+              }}
+              onClick={() => setSelectedSize(39)}
+            >
+              39
+            </Button>
+            <Button
+              aria-label="40"
+              style={{
+                backgroundColor: selectedSize === 40 ? "#ffd030" : "inherit",
+                color: "white",
+              }}
+              onClick={() => setSelectedSize(40)}
+            >
+              40
+            </Button>
+            <Button
+              aria-label="41"
+              style={{
+                backgroundColor: selectedSize === 41 ? "#ffd030" : "inherit",
+                color: "white",
+              }}
+              onClick={() => setSelectedSize(41)}
+            >
+              41
+            </Button>
+          </ButtonGroup>
         </Grid>
       </Grid>
     </Grid>
