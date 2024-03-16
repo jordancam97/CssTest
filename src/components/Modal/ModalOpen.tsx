@@ -6,9 +6,18 @@ import {
   Fade,
   Grid,
   Slide,
+  InputAdornment,
+  Button,
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
+
 import "./ModalOpen.css";
+import FilledInput from "@mui/material/FilledInput";
+import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
+import Input from "@mui/material/Input";
+import InputLabel from "@mui/material/InputLabel";
+import OutlinedInput from "@mui/material/OutlinedInput";
 
 const ModalOpen = ({ open, handleClose }) => {
   return (
@@ -77,9 +86,82 @@ const ModalOpen = ({ open, handleClose }) => {
 
               <Slide direction="right" in={true} timeout={500}>
                 <Grid item xs={6} className="columnRight">
-                  <div>
-                    <h3 style={{ color: "white" }}>Column 2</h3>
-                    <p style={{ color: "white" }}>Content for column 2</p>
+                  <Typography sx={{ fontWeight: "bold" }}>
+                    Payment Details
+                  </Typography>
+                  <FormControl variant="standard">
+                    <InputLabel
+                      htmlFor="component-simple"
+                      style={{ color: "#392c00" }}
+                    >
+                      Name
+                    </InputLabel>
+                    <Input id="component-simple" />
+                  </FormControl>
+                  <FormControl variant="standard">
+                    <InputLabel
+                      htmlFor="visa-input"
+                      style={{ color: "#392c00" }}
+                    >
+                      Card Number
+                    </InputLabel>
+                    <Input
+                      id="number-input"
+                      type="number"
+                      inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <img
+                            src="/assets/images/air-max.png"
+                            alt="Visa"
+                            style={{
+                              width: 24,
+                              height: 24,
+                              objectFit: "contain",
+                            }}
+                          />
+                        </InputAdornment>
+                      }
+                    />
+                  </FormControl>
+                  <Grid sx={{ display: "flex", flexDirection: "row" }}>
+                    <Grid xs={8} mr={2}>
+                      <FormControl variant="standard">
+                        <InputLabel
+                          htmlFor="component-simple"
+                          style={{ color: "#392c00" }}
+                        >
+                          Card Expiry
+                        </InputLabel>
+                        <Input id="component-simple" />
+                      </FormControl>
+                    </Grid>
+                    <Grid xs={4}>
+                      <FormControl variant="standard">
+                        <InputLabel
+                          htmlFor="cvv-input"
+                          style={{ color: "#392c00" }}
+                        >
+                          CVV
+                        </InputLabel>
+                        <Input
+                          id="cvv-input"
+                          fullWidth
+                          autoComplete="off"
+                          type="password"
+                        />
+                      </FormControl>
+                    </Grid>
+                  </Grid>
+                  <Typography sx={{color:"#392c00"}}>Payment Amount: US$ <strong>275</strong></Typography>
+                  <div style={{ display: "flex", justifyContent: "center" }}>
+                    <Button
+                      size="large"
+                      className="container_button"
+                      variant="contained"
+                    >
+                      Pay
+                    </Button>
                   </div>
                 </Grid>
               </Slide>
