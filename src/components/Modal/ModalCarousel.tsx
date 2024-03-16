@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Grid, Modal, Fade, IconButton } from "@mui/material";
+import { Grid, Modal, Fade, IconButton } from "@mui/material";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";

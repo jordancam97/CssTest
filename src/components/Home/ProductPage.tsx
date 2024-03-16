@@ -5,14 +5,11 @@ import {
   Slide,
   Zoom,
   Typography,
-  TextField,
 } from "@mui/material";
-import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import ModalCarousel from "../Modal/ModalCarousel.tsx";
 import "./ProductPage.css";
 import ModalOpen from "../Modal/ModalOpen.tsx";
 import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
-import ButtonGroup from "@mui/material/ButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import AddIcon from "@mui/icons-material/Add";
