@@ -24,7 +24,7 @@
 }
 
 .container_button {
-  margin-top: 25px !important;
+  margin: 15px 0px !important;
   margin-bottom: 25px !important;
   background-color: #ffd030 !important;
   color: #191919 !important;
@@ -95,10 +95,25 @@
 }
 
 .container_starsText {
-  color: #a8a8a8 !important;
   font-weight: bold !important;
 }
 
 .container_starsInfo {
   margin-top: 8px !important;
+}
+
+@keyframes increaseBorder {
+  0% {
+    border-width: 1px;
+  }
+  50% {
+    border-width: 2px;
+  }
+  100% {
+    border-width: 1px;
+  }
+}
+
+.increasing-border{
+  animation: increaseBorder 1s ease-in-out infinite;
 }
