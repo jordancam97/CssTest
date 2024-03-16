@@ -16,17 +16,32 @@ import FormControl from "@mui/material/FormControl";
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import LinearProgress from "@mui/material/LinearProgress";
-import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
+import TaskAltRoundedIcon from "@mui/icons-material/TaskAltRounded";
+import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
 
 const ModalOpen = ({ open, handleClose, selectedSize, quantity }) => {
   const totalAmount = quantity * 275;
   const [transactionSuccess, setTransactionSuccess] = useState(false);
   const [transactionFailed, setTransactionFailed] = useState(false);
   const [transactionInProgress, setTransactionInProgress] = useState(false);
+  const [transactionId, setTransactionId] = useState("");
 
   useEffect(() => {
     setTransactionSuccess(false);
   }, []);
+
+  const generateTransactionId = () => {
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const charactersLength = characters.length;
+    let transactionId = "";
+    for (let i = 0; i < 8; i++) {
+      transactionId += characters.charAt(
+        Math.floor(Math.random() * charactersLength)
+      );
+    }
+    return transactionId;
+  };
 
   const handlePay = () => {
     // Espacio logica de pago
@@ -35,6 +50,7 @@ const ModalOpen = ({ open, handleClose, selectedSize, quantity }) => {
     const transactionSuccess = true; // Cambiar a false para simular una transacción fallida
     setTimeout(() => {
       if (transactionSuccess) {
+        setTransactionId(generateTransactionId());
         setTransactionSuccess(true);
         setTransactionInProgress(false);
       } else {
@@ -122,34 +138,51 @@ const ModalOpen = ({ open, handleClose, selectedSize, quantity }) => {
               <Slide direction="right" in={true} timeout={500}>
                 <Grid item xs={6} className="columnRight">
                   {transactionSuccess && (
-                    <>
-                      <Typography variant="h6" gutterBottom>
-                        Succesful transaction!
-                      </Typography>
-                      <CheckCircleOutlineOutlinedIcon color="success" sx={{fontSize:80}}/>
-                      <Typography>Transaction ID: 987654321.</Typography>
-                      <Typography>
-                        You can visit our nearest stores and claim your order.
-                      </Typography>
-                    </>
+                    <Fade in={true} timeout={800}>
+                      <Grid className="columnRight_transaction">
+                        <Typography variant="h6" gutterBottom>
+                          Succesful transaction!
+                        </Typography>
+                        <TaskAltRoundedIcon
+                          color="success"
+                          sx={{ fontSize: 80 }}
+                          className="columnRight_iconSuccesful"
+                        />
+                        <Typography>
+                          <strong>Transaction ID:</strong> {transactionId}
+                        </Typography>
+                        <Typography>
+                          Thank you for your purchase, now you can visit our
+                          nearest stores and claim your order with the
+                          transaction id.
+                        </Typography>
+                      </Grid>
+                    </Fade>
                   )}
                   {transactionFailed && (
-                    <>
-                      <Typography variant="h6" gutterBottom>
-                        Transaction declined!
-                      </Typography>
-                      <Typography>
-                        We're sorry, the transaction has failed.
-                      </Typography>
-                      <Typography>
-                        Please try again later or contact customer service for
-                        help.
-                      </Typography>
-                    </>
+                    <Fade in={true} timeout={800}>
+                      <Grid className="columnRight_transaction">
+                        <Typography variant="h6" gutterBottom color="error">
+                          Transaction declined!
+                        </Typography>
+                        <ErrorOutlineRoundedIcon
+                          color="error"
+                          sx={{ fontSize: 80 }}
+                          className="columnRight_iconDeclined"
+                        />
+                        <Typography>
+                          We're sorry, the transaction has failed.
+                        </Typography>
+                        <Typography>
+                          Please try again later or contact customer service for
+                          help.
+                        </Typography>
+                      </Grid>
+                    </Fade>
                   )}
                   {!transactionSuccess && !transactionFailed && (
                     <>
-                      <Typography variant="h6" gutterBottom >
+                      <Typography variant="h6" gutterBottom>
                         Payment Details
                       </Typography>
                       <FormControl variant="standard">

@@ -45,3 +45,42 @@
 .css-953pxc-MuiInputBase-root-MuiInput-root::after {
   border-bottom: 2px solid #392c00 !important;
 }
+
+.columnRight_transaction{
+  display: flex;
+  flex-direction: column !important;
+  justify-content: inherit;
+  align-items: center;
+  height: 100%;
+  text-align: center;
+}
+
+.columnRight_iconDeclined {
+  animation: iconDeclined 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes iconDeclined {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.5);
+  }
+}
+
+@keyframes iconSuccesful {
+  0% {
+    transform: scale(1);
+  }
+  50%{
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1.2);
+  }
+}
+
+.columnRight_iconSuccesful {
+  animation: iconSuccesful 1s ease-in-out;
+  animation-fill-mode: forwards; 
+}
