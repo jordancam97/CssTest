@@ -19,7 +19,8 @@ import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
 
-const ModalOpen = ({ open, handleClose }) => {
+const ModalOpen = ({ open, handleClose, selectedSize, quantity  }) => {
+  const totalAmount = quantity * 275;
   return (
     <Modal
       open={open}
@@ -71,11 +72,11 @@ const ModalOpen = ({ open, handleClose }) => {
                       <br />
                       <Grid sx={{ fontSize: 12, lineHeight: "14px" }}>
                         <span>
-                          <strong>Size:</strong> 40
+                          <strong>Size:</strong> {selectedSize}
                         </span>
                         <br />
                         <span>
-                          <strong>Ammount:</strong> 2
+                          <strong>Quantity:</strong> {quantity}
                         </span>
                         <br />
                       </Grid>
@@ -153,7 +154,7 @@ const ModalOpen = ({ open, handleClose }) => {
                       </FormControl>
                     </Grid>
                   </Grid>
-                  <Typography sx={{color:"#392c00"}}>Payment Amount: US$ <strong>275</strong></Typography>
+                  <Typography sx={{color:"#392c00"}}>Payment Amount: US$ <strong>{totalAmount}</strong></Typography>
                   <div style={{ display: "flex", justifyContent: "center" }}>
                     <Button
                       size="large"

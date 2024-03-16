@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Button, Grid, Slide, Zoom, Typography } from "@mui/material";
+import {
+  Button,
+  Grid,
+  Slide,
+  Zoom,
+  Typography,
+  TextField,
+} from "@mui/material";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import ModalCarousel from "../Modal/ModalCarousel.tsx";
 import "./ProductPage.css";
@@ -7,14 +14,16 @@ import ModalOpen from "../Modal/ModalOpen.tsx";
 import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 
 const ProductPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [carouselOpen, setCarouselOpen] = useState(false);
-
-  const handleOpenModal = () => {
-    setModalOpen(true);
-  };
+  const [selectedSize, setSelectedSize] = useState<number | null>(null);
+  const [quantity, setQuantity] = useState(1);
+  const [statePay, setStatePay] = useState(false);
 
   const images = [
     "/assets/images/air-max-1.png",
@@ -26,7 +35,37 @@ const ProductPage = () => {
     "/assets/images/air-max-7.png",
   ];
 
-  const [selectedSize, setSelectedSize] = useState<number | null>(null);
+  const handleChange = (
+    event: React.MouseEvent<HTMLElement>,
+    newAlignment: number
+  ) => {
+    setSelectedSize(newAlignment);
+  };
+
+  const handleIncrement = () => {
+    if (quantity < 12) {
+      const newValue = quantity + 1;
+      setQuantity(newValue);
+    }
+  };
+
+  const handleDecrement = () => {
+    if (quantity > 1) {
+      const newValue = quantity - 1;
+      setQuantity(newValue);
+    }
+  };
+
+  const totalAmount = quantity * 275;
+
+  const handleOpenModal = () => {
+    if (selectedSize === null || quantity === 0) {
+      setStatePay(true);
+    } else {
+      setStatePay(false);
+      setModalOpen(true);
+    }
+  };
 
   return (
     <Grid container mt={0} className="container" spacing={2}>
@@ -72,7 +111,16 @@ const ProductPage = () => {
             seen before
           </Typography>
         </Zoom>
-        <Typography className="container_text">US$275</Typography>
+        <Typography
+          sx={{
+            fontWeight: "bold",
+            color: "white",
+            fontSize: "25px",
+            marginTop: "15px",
+          }}
+        >
+          US$ {quantity === 0 ? 275 : totalAmount}
+        </Typography>
         <Button
           size="large"
           className="container_button"
@@ -84,7 +132,12 @@ const ProductPage = () => {
           credit card
         </Button>
         {/* Modal para otros detalles del producto */}
-        <ModalOpen open={modalOpen} handleClose={() => setModalOpen(false)} />
+        <ModalOpen
+          open={modalOpen}
+          handleClose={() => setModalOpen(false)}
+          selectedSize={selectedSize}
+          quantity={quantity}
+        />
         <Grid container className="container_info">
           <Grid
             xs={6}
@@ -149,55 +202,142 @@ const ProductPage = () => {
 
         <Grid container className="container_stars">
           <Grid
-            xs={3}
             sx={{
               textAlign: "left",
             }}
           >
-            <Typography className="container_starsText">Sizes</Typography>
+            <Typography
+              className="container_starsText"
+              style={{
+                color: statePay && selectedSize === null ? "red" : "#a8a8a8",
+              }}
+            >
+              Sizes
+            </Typography>
+            <ToggleButtonGroup
+              size="small"
+              color="primary"
+              value={selectedSize}
+              exclusive
+              onChange={handleChange}
+              aria-label="Sizes"
+              style={{
+                border:
+                  statePay && selectedSize === null
+                    ? "1px solid red"
+                    : "1px solid white",
+              }}
+              className={
+                statePay && selectedSize === null ? "increasing-border" : ""
+              }
+            >
+              <ToggleButton
+                value={38}
+                style={{
+                  backgroundColor: selectedSize === 38 ? "#ffd030" : "inherit",
+                  color: selectedSize === 38 ? "black" : "white",
+                  borderRight: "1px solid white",
+                  width: 40,
+                }}
+              >
+                38
+              </ToggleButton>
+              <ToggleButton
+                value={39}
+                style={{
+                  backgroundColor: selectedSize === 39 ? "#ffd030" : "inherit",
+                  color: selectedSize === 39 ? "black" : "white",
+                  borderRight: "1px solid white",
+                  borderLeft: "1px solid white",
+                  width: 40,
+                  textDecoration: "line-through",
+                }}
+                disabled
+              >
+                39
+              </ToggleButton>
+              <ToggleButton
+                value={40}
+                style={{
+                  backgroundColor: selectedSize === 40 ? "#ffd030" : "inherit",
+                  color: selectedSize === 40 ? "black" : "white",
+                  borderRight: "1px solid white",
+                  borderLeft: "1px solid white",
+                  width: 40,
+                }}
+              >
+                40
+              </ToggleButton>
+              <ToggleButton
+                value={41}
+                style={{
+                  backgroundColor: selectedSize === 41 ? "#ffd030" : "inherit",
+                  color: selectedSize === 41 ? "black" : "white",
+                  borderLeft: "1px solid white",
+                  width: 40,
+                }}
+              >
+                41
+              </ToggleButton>
+            </ToggleButtonGroup>
           </Grid>
-          <ButtonGroup color="inherit">
-            <Button
-              aria-label="38"
+          <Grid
+            sx={{
+              textAlign: "left",
+              marginTop: 1,
+            }}
+          >
+            <Typography
+              className="container_starsText"
               style={{
-                backgroundColor: selectedSize === 38 ? "#ffd030" : "inherit",
-                color: "white",
+                color: statePay && quantity === 0 ? "red" : "#a8a8a8",
               }}
-              onClick={() => setSelectedSize(38)}
             >
-              38
-            </Button>
-            <Button
-              aria-label="39"
+              Quantity
+            </Typography>
+            <ToggleButtonGroup
+              size="small"
+              value={quantity}
+              exclusive
               style={{
-                backgroundColor: selectedSize === 39 ? "#ffd030" : "inherit",
-                color: "white",
+                border:
+                  statePay && quantity === 0
+                    ? "1px solid red"
+                    : "1px solid white",
               }}
-              onClick={() => setSelectedSize(39)}
+              className={statePay && quantity === 0 ? "increasing-border" : ""}
             >
-              39
-            </Button>
-            <Button
-              aria-label="40"
-              style={{
-                backgroundColor: selectedSize === 40 ? "#ffd030" : "inherit",
-                color: "white",
-              }}
-              onClick={() => setSelectedSize(40)}
-            >
-              40
-            </Button>
-            <Button
-              aria-label="41"
-              style={{
-                backgroundColor: selectedSize === 41 ? "#ffd030" : "inherit",
-                color: "white",
-              }}
-              onClick={() => setSelectedSize(41)}
-            >
-              41
-            </Button>
-          </ButtonGroup>
+              <ToggleButton
+                value={0}
+                onClick={handleDecrement}
+                style={{
+                  borderRight: "1px solid white",
+                  width: 30,
+                  color: "white",
+                }}
+              >
+                <RemoveIcon />
+              </ToggleButton>
+              <ToggleButton
+                value={quantity}
+                disabled
+                style={{ width: 40, color: "white" }}
+              >
+                {quantity}
+              </ToggleButton>
+              <ToggleButton
+                value={quantity + 1}
+                onClick={handleIncrement}
+                style={{
+                  borderLeft: "1px solid white",
+                  width: 30,
+                  color: "white",
+                }}
+              >
+                <AddIcon />
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </Grid>
         </Grid>
       </Grid>
     </Grid>
