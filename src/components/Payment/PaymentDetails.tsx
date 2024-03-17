@@ -18,7 +18,14 @@ import TaskAltRoundedIcon from "@mui/icons-material/TaskAltRounded";
 import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
 import { Close, ArrowBack } from "@mui/icons-material";
 import { simulatePayment } from "./SimulatePayment.tsx";
-
+import {
+  setTransactionSuccess,
+  setTransactionFailed,
+  setTransactionInProgress,
+  setTransactionId,
+  selectPayment,
+} from "./Actions/store.js";
+import { useDispatch, useSelector } from "react-redux";
 interface FormData {
   name: string;
   cardNumber: number;
@@ -32,17 +39,11 @@ interface FormData {
 const PaymentDetails = ({ quantity, handleClose, selectedSize }) => {
   const totalAmount = quantity * 275;
 
-  const [transactionSuccess, setTransactionSuccess] = useState(false);
-  const [transactionFailed, setTransactionFailed] = useState(false);
-  const [transactionInProgress, setTransactionInProgress] = useState(false);
-  const [transactionId, setTransactionId] = useState("");
   const [cardNumber, setCardNumber] = useState("");
   const [cardType, setCardType] = useState("card");
   const [isInputLabelVisible, setIsInputLabelVisible] = useState(false);
 
-  useEffect(() => {
-    setTransactionSuccess(false);
-  }, []);
+
 
   const generateTransactionId = () => {
     const characters =
@@ -68,21 +69,67 @@ const PaymentDetails = ({ quantity, handleClose, selectedSize }) => {
     clearErrors,
   } = useForm<FormData>();
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
-    setTransactionInProgress(true);
+  const dispatch = useDispatch();
+  const {
+    transactionSuccess,
+    transactionFailed,
+    transactionInProgress,
+    transactionId,
+  } = useSelector(selectPayment);
+
+  // useEffect(() => {
+  //   const storedTransactionId = localStorage.getItem("transactionId");
+  //   if (storedTransactionId) {
+  //     dispatch(setTransactionId(storedTransactionId));
+  //   }
+  // }, [dispatch]);
+
+  useEffect(() => {
+    const storedData = localStorage.getItem("paymentData");
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      // Restaurar el estado del componente con los datos almacenados
+      dispatch(setTransactionSuccess(parsedData.transactionSuccess));
+      dispatch(setTransactionFailed(parsedData.transactionFailed));
+      dispatch(setTransactionInProgress(parsedData.transactionInProgress));
+      dispatch(setTransactionId(parsedData.transactionId));
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    // Guardar los datos relevantes en el almacenamiento local cuando cambie el estado
+    const dataToStore = JSON.stringify({
+      transactionSuccess,
+      transactionFailed,
+      transactionInProgress,
+      transactionId,
+    });
+    localStorage.setItem("paymentData", dataToStore);
+  }, [transactionSuccess, transactionFailed, transactionInProgress, transactionId]);
+
+  const onSubmit = (data) => {
+    dispatch(setTransactionInProgress(true));
 
     simulatePayment(data)
       .then((response) => {
         console.log(response);
-        setTransactionId(generateTransactionId());
-        setTransactionSuccess(true);
-        setTransactionInProgress(false);
+        const newTransactionId = generateTransactionId();
+        dispatch(setTransactionId(newTransactionId));
+        dispatch(setTransactionSuccess(true));
+        dispatch(setTransactionInProgress(false));
+        localStorage.removeItem("paymentData"); // Limpiar datos almacenados al completar la transacción
+        localStorage.setItem("transactionId", newTransactionId);
       })
       .catch((error) => {
         console.error(error);
-        setTransactionFailed(true);
-        setTransactionInProgress(false);
+        dispatch(setTransactionFailed(true));
+        dispatch(setTransactionInProgress(false));
       });
+  };
+
+  const handleRetry = () => {
+    dispatch(setTransactionFailed(false));
+    reset();
   };
 
   const handleCardNumberChange = (event) => {
@@ -141,14 +188,10 @@ const PaymentDetails = ({ quantity, handleClose, selectedSize }) => {
     }
   };
 
-  const handleRetry = () => {
-    setTransactionFailed(false);
-  };
-
   const handleModalClose = () => {
     handleClose();
     setTimeout(() => {
-      setTransactionSuccess(false);
+      dispatch(setTransactionSuccess(false));
       setIsInputLabelVisible(false);
       reset();
     }, 100);
