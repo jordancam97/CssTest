@@ -17,7 +17,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import TaskAltRoundedIcon from "@mui/icons-material/TaskAltRounded";
 import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
 import { Close, ArrowBack } from "@mui/icons-material";
-import { simulatePayment } from './SimulatePayment.tsx';
+import { simulatePayment } from "./SimulatePayment.tsx";
 
 interface FormData {
   name: string;
@@ -29,7 +29,7 @@ interface FormData {
   };
 }
 
-const PaymentDetails = ({ quantity, handleClose }) => {
+const PaymentDetails = ({ quantity, handleClose, selectedSize }) => {
   const totalAmount = quantity * 275;
 
   const [transactionSuccess, setTransactionSuccess] = useState(false);
@@ -68,9 +68,8 @@ const PaymentDetails = ({ quantity, handleClose }) => {
     clearErrors,
   } = useForm<FormData>();
 
-
   const onSubmit: SubmitHandler<FormData> = (data) => {
-    setTransactionInProgress(true); 
+    setTransactionInProgress(true);
 
     simulatePayment(data)
       .then((response) => {
@@ -162,8 +161,8 @@ const PaymentDetails = ({ quantity, handleClose }) => {
         onClick={transactionFailed ? handleRetry : handleModalClose}
         sx={{
           position: "absolute",
-          top: 10,
-          right: 10,
+          top: { xs: "38px", sm: "30px", md: "10px" },
+          right: { xs: "38px", sm: "30px", md: "10px" },
           color: "black",
         }}
       >
@@ -214,7 +213,19 @@ const PaymentDetails = ({ quantity, handleClose }) => {
           <Typography variant="h6" gutterBottom>
             Payment Details
           </Typography>
+
           <form onSubmit={handleSubmit(onSubmit)} className="columnRight_form">
+            <span>Air Max Plus 3 IronMan</span>
+            <Grid sx={{ fontSize: 12, lineHeight: "14px" }}>
+              <span>
+                <strong>Size:</strong> {selectedSize}
+              </span>
+              <br />
+              <span>
+                <strong>Quantity:</strong> {quantity}
+              </span>
+              <br />
+            </Grid>
             <TextField
               label="Nombre"
               variant="standard"
