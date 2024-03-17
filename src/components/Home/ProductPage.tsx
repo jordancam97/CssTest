@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Grid, Slide, Zoom, Typography } from "@mui/material";
 import ModalCarousel from "../Modal/ModalCarousel.tsx";
 import "./ProductPage.css";
@@ -9,12 +9,18 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+import {
+  setSelectedSize,
+  setQuantity,
+  selectState,
+  setModalOpen
+} from "../Payment/Actions/store.js";
+import { useDispatch, useSelector } from "react-redux";
 
 const ProductPage = () => {
-  const [modalOpen, setModalOpen] = useState(false);
+  // const [modalOpen, setModalOpen] = useState(false);
   const [carouselOpen, setCarouselOpen] = useState(false);
-  const [selectedSize, setSelectedSize] = useState<number | null>(null);
-  const [quantity, setQuantity] = useState(1);
+  // const [selectedSize, setSelectedSize] = useState<number | null>(null);
   const [statePay, setStatePay] = useState(false);
 
   const images = [
@@ -27,24 +33,59 @@ const ProductPage = () => {
     "/assets/images/air-max-7.png",
   ];
 
+  const dispatch = useDispatch();
+  const {
+    selectedSize,
+    quantity,
+    modalOpen
+  } = useSelector(selectState);
+
+  console.log("selectedSize", quantity);
+
+  useEffect(() => {
+    const storedData = localStorage.getItem("allState");
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      dispatch(setSelectedSize(parsedData.selectedSize));
+      dispatch(setQuantity(parsedData.quantity));
+      dispatch(setModalOpen(parsedData.modalOpen));
+
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    const dataToStore = JSON.stringify({
+      selectedSize,
+      quantity,
+      modalOpen
+    });
+    localStorage.setItem("allState", dataToStore);
+  }, [
+    selectedSize,
+    quantity,
+    modalOpen
+  ]);
+
+  
+
   const handleChange = (
     event: React.MouseEvent<HTMLElement>,
     newAlignment: number
   ) => {
-    setSelectedSize(newAlignment);
+    dispatch(setSelectedSize(newAlignment));
   };
 
   const handleIncrement = () => {
     if (quantity < 12) {
       const newValue = quantity + 1;
-      setQuantity(newValue);
+      dispatch(setQuantity(newValue));
     }
   };
 
   const handleDecrement = () => {
     if (quantity > 1) {
       const newValue = quantity - 1;
-      setQuantity(newValue);
+      dispatch(setQuantity(newValue));
     }
   };
 
@@ -55,7 +96,7 @@ const ProductPage = () => {
       setStatePay(true);
     } else {
       setStatePay(false);
-      setModalOpen(true);
+      dispatch(setModalOpen(true));
     }
   };
 
@@ -69,7 +110,7 @@ const ProductPage = () => {
     >
       <ModalOpen
         open={modalOpen}
-        handleClose={() => setModalOpen(false)}
+        handleClose={() => dispatch(setModalOpen(false))}
         selectedSize={selectedSize}
         quantity={quantity}
       />
