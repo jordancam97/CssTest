@@ -21,11 +21,16 @@ import InputLabel from "@mui/material/InputLabel";
 import LinearProgress from "@mui/material/LinearProgress";
 import TaskAltRoundedIcon from "@mui/icons-material/TaskAltRounded";
 import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 
 interface FormData {
   name: string;
   cardNumber: number;
+  cvv: number | null;
+  expiry: {
+    month: string;
+    year: string;
+  };
 }
 
 const ModalOpen = ({ open, handleClose, selectedSize, quantity }) => {
@@ -34,6 +39,9 @@ const ModalOpen = ({ open, handleClose, selectedSize, quantity }) => {
   const [transactionFailed, setTransactionFailed] = useState(false);
   const [transactionInProgress, setTransactionInProgress] = useState(false);
   const [transactionId, setTransactionId] = useState("");
+  const [cardNumber, setCardNumber] = useState("");
+  const [cardType, setCardType] = useState("card");
+  const [isInputLabelVisible, setIsInputLabelVisible] = useState(false);
 
   useEffect(() => {
     setTransactionSuccess(false);
@@ -53,15 +61,20 @@ const ModalOpen = ({ open, handleClose, selectedSize, quantity }) => {
   };
 
   const {
+    control,
     register,
     handleSubmit,
     formState: { errors },
+    reset,
+    watch,
+    setValue,
+    clearErrors,
   } = useForm<FormData>();
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
     console.log(data);
     setTransactionInProgress(true); // Indica que la transacción está en curso
-    const transactionSuccess = true; // Cambiar a false para simular una transacción fallida
+    const transactionSuccess = false; // Cambiar a false para simular una transacción fallida
     setTimeout(() => {
       if (transactionSuccess) {
         setTransactionId(generateTransactionId());
@@ -82,11 +95,10 @@ const ModalOpen = ({ open, handleClose, selectedSize, quantity }) => {
     handleClose();
     setTimeout(() => {
       setTransactionSuccess(false);
-    }, 500);
+      setIsInputLabelVisible(false);
+      reset();
+    }, 100);
   };
-
-  const [cardNumber, setCardNumber] = useState("");
-  const [cardType, setCardType] = useState("card");
 
   const handleCardNumberChange = (event) => {
     const inputCardNumber = event.target.value;
@@ -94,7 +106,7 @@ const ModalOpen = ({ open, handleClose, selectedSize, quantity }) => {
 
     const cardRegex = {
       visa: /^4/,
-      mastercard: /^5[1-5]/,
+      mastercard: /^5[1-9]/,
       amex: /^3[47]/,
       discover: /^6/,
       dinersclub: /^3(?:0[0-5]|[68])/,
@@ -120,7 +132,29 @@ const ModalOpen = ({ open, handleClose, selectedSize, quantity }) => {
     setCardType("card");
   };
 
-  console.log("cardType", cardType);
+  useEffect(() => {
+    setValue("cvv", null);
+    clearErrors("cvv");
+  }, [watch("cardNumber")]);
+
+  const isMonthValid = (value: string) => {
+    const monthNumber = parseInt(value);
+    return !isNaN(monthNumber) && monthNumber >= 1 && monthNumber <= 12;
+  };
+
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth() + 1; 
+  const currentYear = currentDate.getFullYear() % 100;
+
+  const handleInputFocus = () => {
+    setIsInputLabelVisible(true);
+  };
+
+  const handleInputBlur = () => {
+    if (!watch("expiry.month") && !watch("expiry.year")) {
+      setIsInputLabelVisible(false);
+    }
+  };
 
   return (
     <Modal
@@ -225,8 +259,8 @@ const ModalOpen = ({ open, handleClose, selectedSize, quantity }) => {
                           We're sorry, the transaction has failed.
                         </Typography>
                         <Typography>
-                          Please try again later or contact customer service for
-                          help.
+                          Please try again later. If the problem persists, we
+                          recommend that you contact your card-issuing bank.
                         </Typography>
                       </Grid>
                     </Fade>
@@ -244,15 +278,14 @@ const ModalOpen = ({ open, handleClose, selectedSize, quantity }) => {
                           label="Nombre"
                           variant="standard"
                           {...register("name", {
-                            required: "El nombre es requerido*",
+                            required: "Name is required*",
                             pattern: {
-                              value: /^(?!.*\s{2})[a-zA-Z\s]*$/,
-                              message: "Formato de nombre invalido",
+                              value: /^(?!.*\s{2})[a-zA-Z\u00C0-\u017F\s']*$/,
+                              message: "Invalid name format",
                             },
                             minLength: {
                               value: 3,
-                              message:
-                                "El nombre debe tener al menos 3 letras.",
+                              message: "Name must be at least 3 letters",
                             },
                           })}
                           error={!!errors.name}
@@ -262,7 +295,7 @@ const ModalOpen = ({ open, handleClose, selectedSize, quantity }) => {
                         <FormControl variant="standard">
                           <InputLabel
                             htmlFor="visa-input"
-                            style={{ color: errors.cardNumber? "#d32f2f" : "#392c00" }}
+                            style={{ color: errors.cardNumber && "#d32f2f" }}
                           >
                             Card Number
                           </InputLabel>
@@ -271,12 +304,12 @@ const ModalOpen = ({ open, handleClose, selectedSize, quantity }) => {
                             type="text"
                             inputProps={{
                               inputMode: "numeric",
-                              maxLength: 16, 
+                              maxLength: 16,
                               ...register("cardNumber", {
                                 required: "Card number is required*",
                                 pattern: {
                                   value: /^[0-9]+$/,
-                                  message: "Solo se aceptan numeros",
+                                  message: "Card number entered is incorrect",
                                 },
                                 maxLength: {
                                   value: 16,
@@ -296,7 +329,7 @@ const ModalOpen = ({ open, handleClose, selectedSize, quantity }) => {
                               <InputAdornment position="end">
                                 <img
                                   src={`/assets/images/${cardType}.png`}
-                                  alt="Visa"
+                                  alt={`${cardType} logo`}
                                   style={{
                                     width: 24,
                                     height: 24,
@@ -317,32 +350,129 @@ const ModalOpen = ({ open, handleClose, selectedSize, quantity }) => {
                           )}
                         </FormControl>
                         <Grid sx={{ display: "flex", flexDirection: "row" }}>
-                          <Grid xs={8} mr={2}>
-                            <FormControl variant="standard">
-                              <InputLabel
-                                htmlFor="component-simple"
-                                style={{ color: "#392c00" }}
+                          <Grid xs={8} mr={2} mt={"-6px"}>
+                            <InputLabel
+                              htmlFor="card expiry"
+                              sx={{
+                                color: errors.expiry && "#d32f2f",
+                                visibility:
+                                  isInputLabelVisible || errors.expiry
+                                    ? "visible"
+                                    : "hidden",
+                              }}
+                            >
+                              Card expiry
+                            </InputLabel>
+                            <Grid
+                              xs={7}
+                              sx={{ display: "flex", flexDirection: "row" }}
+                            >
+                              <Controller
+                                name="expiry.month"
+                                control={control}
+                                defaultValue=""
+                                rules={{
+                                  required: "Month is required",
+                                  validate: {
+                                    validMonth: (value) =>
+                                      isMonthValid(value) || "Invalid month",
+                                    futureMonth: (value) =>
+                                      parseInt(value) > currentMonth ||
+                                      "Expiry month should be in the future",
+                                  },
+                                  minLength: 2,
+                                  maxLength: 2,
+                                }}
+                                render={({ field }) => (
+                                  <TextField
+                                    {...field}
+                                    variant="standard"
+                                    fullWidth
+                                    autoComplete="off"
+                                    inputProps={{
+                                      maxLength: 2,
+                                      style: { textAlign: "center" },
+                                    }}
+                                    placeholder="MM"
+                                    onFocus={handleInputFocus}
+                                    onBlur={handleInputBlur}
+                                  />
+                                )}
+                              />
+                              <Typography>/</Typography>
+                              <Controller
+                                name="expiry.year"
+                                control={control}
+                                defaultValue=""
+                                rules={{
+                                  required: "Year is required",
+                                  pattern: {
+                                    value: /^[0-9]*$/,
+                                    message: "Invalid year",
+                                  },
+                                  minLength: 2,
+                                  maxLength: 2,
+                                  min: {
+                                    value: currentYear,
+                                    message: `Year must be ${currentYear} or later`,
+                                  },
+                                }}
+                                render={({ field }) => (
+                                  <TextField
+                                    {...field}
+                                    variant="standard"
+                                    fullWidth
+                                    autoComplete="off"
+                                    inputProps={{
+                                      maxLength: 2,
+                                      min: currentYear,
+                                      style: { textAlign: "center" },
+                                    }}
+                                    placeholder="YY"
+                                    onFocus={handleInputFocus}
+                                    onBlur={handleInputBlur}
+                                  />
+                                )}
+                              />
+                            </Grid>
+                            {errors.expiry && (
+                              <FormHelperText
+                                style={{ color: "#d32f2f" }}
+                                id="standard-weight-helper-text"
                               >
-                                Card Expiry
-                              </InputLabel>
-                              <Input id="component-simple" />
-                            </FormControl>
+                                Invalid card expiration
+                              </FormHelperText>
+                            )}
                           </Grid>
                           <Grid xs={4}>
-                            <FormControl variant="standard">
-                              <InputLabel
-                                htmlFor="cvv-input"
-                                style={{ color: "#392c00" }}
-                              >
-                                CVV
-                              </InputLabel>
-                              <Input
-                                id="cvv-input"
-                                fullWidth
-                                autoComplete="off"
-                                type="password"
-                              />
-                            </FormControl>
+                            <TextField
+                              label="CVV"
+                              variant="standard"
+                              fullWidth
+                              autoComplete="new-password"
+                              type="password"
+                              inputProps={{
+                                inputMode: "numeric",
+                                maxLength: cardType === "amex" ? 4 : 3,
+                                ...register("cvv", {
+                                  required: "Required*",
+                                  pattern: {
+                                    value: /^[0-9]+$/,
+                                    message: "Invalid",
+                                  },
+                                  maxLength: {
+                                    value: cardType === "amex" ? 4 : 3,
+                                    message: "Invalid Max",
+                                  },
+                                  minLength: {
+                                    value: cardType === "amex" ? 4 : 3,
+                                    message: "Invalid Min",
+                                  },
+                                }),
+                              }}
+                              error={!!errors.cvv}
+                              helperText={errors.cvv && errors.cvv.message}
+                            />
                           </Grid>
                         </Grid>
                         <Typography sx={{ color: "#392c00" }}>

@@ -42,12 +42,16 @@
   justify-content: space-around;
 }
 
-.css-1eed5fa-MuiInputBase-root-MuiInput-root::after {
-  border-bottom: 2px solid #392c00 !important;
+.css-1c2i806-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+  color: grey !important;
 }
 
-.css-953pxc-MuiInputBase-root-MuiInput-root::after {
-  border-bottom: 2px solid #392c00 !important;
+.css-1eed5fa-MuiInputBase-root-MuiInput-root::after {
+  border-bottom: 2px solid grey !important;
+}
+
+.css-953pxc-MuiInputBase-root-MuiInput-root::after{
+  border-bottom: 2px solid grey !important;
 }
 
 .columnRight_transaction{
@@ -60,7 +64,9 @@
 }
 
 .columnRight_iconDeclined {
-  animation: iconDeclined 0.8s ease-in-out infinite alternate;
+  animation: iconDeclined 0.8s ease-in-out;
+  animation-fill-mode: forwards; 
+
 }
 
 @keyframes iconDeclined {
