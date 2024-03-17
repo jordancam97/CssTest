@@ -5,9 +5,8 @@ const simulatePayment = (data) => {
         reject({ success: false, message: "Payment error" });
       } else {
         resolve({ success: true, message: "Successful payment" });
-        
       }
-    }, 1000); 
+    }, 1000);
   });
 };
 

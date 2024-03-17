@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  Button,
-  Grid,
-  Slide,
-  Zoom,
-  Typography,
-} from "@mui/material";
+import { Button, Grid, Slide, Zoom, Typography } from "@mui/material";
 import ModalCarousel from "../Modal/ModalCarousel.tsx";
 import "./ProductPage.css";
 import ModalOpen from "../Modal/ModalOpen.tsx";
@@ -65,14 +59,36 @@ const ProductPage = () => {
   };
 
   return (
-    <Grid container mt={0} className="container" spacing={2}>
+    <Grid
+      container
+      mt={0}
+      className="container"
+      spacing={2}
+      sx={{ height: { sm: "calc(100vh - 70px)" } }}
+    >
+      <ModalOpen
+        open={modalOpen}
+        handleClose={() => setModalOpen(false)}
+        selectedSize={selectedSize}
+        quantity={quantity}
+      />
+      <ModalCarousel
+        open={carouselOpen}
+        handleClose={() => setCarouselOpen(false)}
+        images={images}
+      />
       <Grid
         item
-        xs={5}
+        xs={12}
+        sm={5}
         sx={{
           textAlign: "left",
-          paddingLeft: "137px !important",
-          display: "flex",
+          paddingLeft: {
+            sm: "30px !important",
+            md: "40px !important",
+            lg: "137px !important",
+          },
+          display: { xs: "none", sm: "flex" },
           flexDirection: "column",
           paddingTop: "0px !important",
           justifyContent: "center",
@@ -94,7 +110,12 @@ const ProductPage = () => {
           unmountOnExit
           timeout={300}
         >
-          <Typography className="container_subTitle">Plus 3 IronMan</Typography>
+          <Typography
+            className="container_subTitle"
+            sx={{ lineHeight: { xs: "50px", lg: "75px" } }}
+          >
+            Plus 3 IronMan
+          </Typography>
         </Slide>
 
         <Zoom in={true} timeout={800}>
@@ -128,13 +149,7 @@ const ProductPage = () => {
           Pay with <br />
           credit card
         </Button>
-        {/* Modal para otros detalles del producto */}
-        <ModalOpen
-          open={modalOpen}
-          handleClose={() => setModalOpen(false)}
-          selectedSize={selectedSize}
-          quantity={quantity}
-        />
+
         <Grid container className="container_info">
           <Grid
             xs={6}
@@ -166,9 +181,50 @@ const ProductPage = () => {
           </Grid>
         </Grid>
       </Grid>
+
+      {/* Responsive mobile */}
       <Grid
         item
-        xs={7}
+        xs={12}
+        sm={5}
+        sx={{
+          textAlign: "left",
+          padding: "30px !important",
+          display: { xs: "flex", sm: "none" },
+          flexDirection: "column",
+          paddingTop: "0px !important",
+          justifyContent: "center",
+        }}
+      >
+        <Slide
+          direction="right"
+          in={true}
+          mountOnEnter
+          unmountOnExit
+          timeout={100}
+        >
+          <Typography className="container_title">Air Max</Typography>
+        </Slide>
+        <Slide
+          direction="right"
+          in={true}
+          mountOnEnter
+          unmountOnExit
+          timeout={300}
+        >
+          <Typography
+            className="container_subTitle"
+            sx={{ lineHeight: { xs: "50px", lg: "75px" } }}
+          >
+            Plus 3 IronMan
+          </Typography>
+        </Slide>
+      </Grid>
+
+      <Grid
+        item
+        xs={12}
+        sm={7}
         sx={{
           display: "flex",
           justifyContent: "center",
@@ -180,6 +236,7 @@ const ProductPage = () => {
           sx={{
             display: "flex",
             position: "relative",
+            fontSize: { xs: "30vw", sm: "22vw", lg: "262px" },
           }}
           className="img_letter"
         >
@@ -191,13 +248,11 @@ const ProductPage = () => {
             onClick={() => setCarouselOpen(true)}
           />
         </Typography>
-        <ModalCarousel
-          open={carouselOpen}
-          handleClose={() => setCarouselOpen(false)}
-          images={images}
-        />
-
-        <Grid container className="container_stars">
+        <Grid
+          container
+          className="container_stars"
+          sx={{ marginTop: { xs: "-7vw", lg: "-79px" } }}
+        >
           <Grid
             sx={{
               textAlign: "left",
@@ -334,6 +389,82 @@ const ProductPage = () => {
                 <AddIcon />
               </ToggleButton>
             </ToggleButtonGroup>
+          </Grid>
+        </Grid>
+
+        {/* Responsive mobile */}
+        <Grid
+          sx={{
+            display: { xs: "flex", sm: "none" },
+            flexDirection: "column",
+            padding: "30px",
+          }}
+        >
+          <Typography
+            sx={{
+              fontWeight: "bold",
+              color: "white",
+              fontSize: "25px",
+              marginTop: "15px",
+            }}
+          >
+            US$ {quantity === 0 ? 275 : totalAmount}
+          </Typography>
+          <Zoom in={true} timeout={800}>
+            <Typography className="container_text">
+              The Nike Air Max, crafted by Tinker Hatfield, made its debut in
+              1987, introducing a revolutionary cushioning system that forever
+              altered the trajectory of athletic footwear. Inspired by the
+              inside-out architecture of the Pompidou Centre in Paris, Hatfield
+              created the first-ever visible Air unit, delivering not just
+              exceptional comfort but a design element that was unlike anything
+              seen before
+            </Typography>
+          </Zoom>
+          <Grid>
+            <Button
+              size="large"
+              className="container_button"
+              variant="contained"
+              onClick={handleOpenModal}
+              startIcon={<CreditCardOutlinedIcon />}
+            >
+              Pay with <br />
+              credit card
+            </Button>
+          </Grid>
+
+          <Grid container className="container_info">
+            <Grid
+              xs={6}
+              sx={{
+                borderColor: "#a8a8a8 !important",
+                borderRight: "solid",
+                borderRightWidth: "0.2px",
+                height: "46px",
+                display: "flex",
+                justifyContent: "center",
+                flexDirection: "column",
+              }}
+            >
+              <Typography className="container_infoOne">90k+</Typography>
+              <Typography className="container_infoText">
+                Collections
+              </Typography>
+            </Grid>
+            <Grid
+              xs={6}
+              sx={{
+                borderColor: "#a8a8a8 !important",
+                height: "46px",
+                display: "flex",
+                justifyContent: "center",
+                flexDirection: "column",
+              }}
+            >
+              <Typography className="container_infoTwo">100k+</Typography>
+              <Typography className="container_infoText">Users</Typography>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
