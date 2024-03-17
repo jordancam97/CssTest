@@ -19,11 +19,8 @@ build:
 
 
 artifacts:
-  files:
-    - '**/*'
-  discard-paths: no
-  base-directory: dist
-  # Agregar mensajes de estado
-  name: MyReactAppArtifacts  # Nombre descriptivo para los artefactos
-  description: Artefactos generados por la construcción de la aplicación React
+   files:
+    - appspec.yml
+    - target/SampleMavenTomcatApp.war
+    - scripts/*
 
