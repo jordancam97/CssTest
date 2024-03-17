@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, Grid, Slide, Zoom, Typography } from "@mui/material";
 import ModalCarousel from "../Modal/ModalCarousel.tsx";
 import "./ProductPage.css";
+import "../../MediaQuery.css"
 import ModalOpen from "../Modal/ModalOpen.tsx";
 import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
 import ToggleButton from "@mui/material/ToggleButton";
@@ -64,7 +65,7 @@ const ProductPage = () => {
       mt={0}
       className="container"
       spacing={2}
-      sx={{ height: { sm: "calc(100vh - 70px)" } }}
+      sx={{ height: { sm:"100vh",md: "calc(100vh - 70px)" } }}
     >
       <ModalOpen
         open={modalOpen}
@@ -236,7 +237,7 @@ const ProductPage = () => {
           sx={{
             display: "flex",
             position: "relative",
-            fontSize: { xs: "30vw", sm: "22vw", lg: "262px" },
+            fontSize: { xs: "35vw", sm: "22vw", lg: "262px" },
           }}
           className="img_letter"
         >
