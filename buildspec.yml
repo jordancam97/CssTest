@@ -8,14 +8,22 @@ phases:
       - echo "Installing dependencies using node 18"
       - npm ci 
       - echo "Done installing dependencies ====>"
-  build:
-    commands:
-      - echo "Building the React Project"
-      - npm run build
-      - echo "Done building the project ==> Exporting artifcats"
+build:
+  commands:
+    - echo "Building the React Project"
+    - npm run build
+    - echo "Done building the project"
+    - ls -l dist  # Lista el contenido del directorio de salida
+    - pwd  # Imprime la ruta actual
+    - echo "Exporting artifacts"
+
 
 artifacts:
   files:
     - '**/*'
   discard-paths: no
   base-directory: dist
+  # Agregar mensajes de estado
+  name: MyReactAppArtifacts  # Nombre descriptivo para los artefactos
+  description: Artefactos generados por la construcción de la aplicación React
+
