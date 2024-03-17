@@ -43,8 +43,6 @@ const PaymentDetails = ({ quantity, handleClose, selectedSize }) => {
   const [cardType, setCardType] = useState("card");
   const [isInputLabelVisible, setIsInputLabelVisible] = useState(false);
 
-
-
   const generateTransactionId = () => {
     const characters =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -77,18 +75,10 @@ const PaymentDetails = ({ quantity, handleClose, selectedSize }) => {
     transactionId,
   } = useSelector(selectPayment);
 
-  // useEffect(() => {
-  //   const storedTransactionId = localStorage.getItem("transactionId");
-  //   if (storedTransactionId) {
-  //     dispatch(setTransactionId(storedTransactionId));
-  //   }
-  // }, [dispatch]);
-
   useEffect(() => {
     const storedData = localStorage.getItem("paymentData");
     if (storedData) {
       const parsedData = JSON.parse(storedData);
-      // Restaurar el estado del componente con los datos almacenados
       dispatch(setTransactionSuccess(parsedData.transactionSuccess));
       dispatch(setTransactionFailed(parsedData.transactionFailed));
       dispatch(setTransactionInProgress(parsedData.transactionInProgress));
@@ -97,7 +87,6 @@ const PaymentDetails = ({ quantity, handleClose, selectedSize }) => {
   }, [dispatch]);
 
   useEffect(() => {
-    // Guardar los datos relevantes en el almacenamiento local cuando cambie el estado
     const dataToStore = JSON.stringify({
       transactionSuccess,
       transactionFailed,
@@ -105,7 +94,12 @@ const PaymentDetails = ({ quantity, handleClose, selectedSize }) => {
       transactionId,
     });
     localStorage.setItem("paymentData", dataToStore);
-  }, [transactionSuccess, transactionFailed, transactionInProgress, transactionId]);
+  }, [
+    transactionSuccess,
+    transactionFailed,
+    transactionInProgress,
+    transactionId,
+  ]);
 
   const onSubmit = (data) => {
     dispatch(setTransactionInProgress(true));
@@ -117,7 +111,7 @@ const PaymentDetails = ({ quantity, handleClose, selectedSize }) => {
         dispatch(setTransactionId(newTransactionId));
         dispatch(setTransactionSuccess(true));
         dispatch(setTransactionInProgress(false));
-        localStorage.removeItem("paymentData"); // Limpiar datos almacenados al completar la transacción
+        localStorage.removeItem("paymentData");
         localStorage.setItem("transactionId", newTransactionId);
       })
       .catch((error) => {
@@ -197,20 +191,23 @@ const PaymentDetails = ({ quantity, handleClose, selectedSize }) => {
     }, 100);
   };
 
+
   return (
     <>
-      <IconButton
-        aria-label="close"
-        onClick={transactionFailed ? handleRetry : handleModalClose}
-        sx={{
-          position: "absolute",
-          top: { xs: "38px", sm: "30px", md: "10px" },
-          right: { xs: "38px", sm: "30px", md: "10px" },
-          color: "black",
-        }}
-      >
-        {transactionFailed ? <ArrowBack /> : <Close />}
-      </IconButton>
+      <Fade in={true} timeout={3000}>
+        <IconButton
+          aria-label="close"
+          onClick={transactionFailed ? handleRetry : handleModalClose}
+          sx={{
+            position: "absolute",
+            top: { xs: "38px", sm: "30px", md: "10px" },
+            right: { xs: "38px", sm: "30px", md: "10px" },
+            color: "black",
+          }}
+        >
+          {transactionFailed ? <ArrowBack /> : <Close />}
+        </IconButton>
+      </Fade>
       {transactionSuccess && (
         <Fade in={true} timeout={800}>
           <Grid className="columnRight_transaction">
