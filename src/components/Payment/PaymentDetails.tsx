@@ -343,7 +343,7 @@ const PaymentDetails = ({ handleClose }) => {
                 </FormHelperText>
               )}
             </FormControl>
-            <Grid sx={{ display: "flex", flexDirection: "row" }}>
+            <Grid sx={{ display: "flex", flexDirection: "row", marginTop:"6px" }}>
               <Grid xs={8} mr={2} mt={"-6px"}>
                 <InputLabel
                   htmlFor="card expiry"
@@ -466,7 +466,7 @@ const PaymentDetails = ({ handleClose }) => {
                 />
               </Grid>
             </Grid>
-            <Typography sx={{ color: "#392c00" }}>
+            <Typography sx={{ color: "#392c00", marginTop:"15px"}}>
               Payment Amount: US$ <strong>{totalAmount}</strong>
             </Typography>
             <div
