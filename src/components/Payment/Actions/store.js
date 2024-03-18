@@ -5,7 +5,6 @@ const paymentSlice = createSlice({
   initialState: {
     transactionSuccess: false,
     transactionFailed: false,
-    transactionInProgress: false,
     transactionId: "",
   },
   reducers: {
@@ -14,9 +13,6 @@ const paymentSlice = createSlice({
     },
     setTransactionFailed: (state, action) => {
       state.transactionFailed = action.payload;
-    },
-    setTransactionInProgress: (state, action) => {
-      state.transactionInProgress = action.payload;
     },
     setTransactionId: (state, action) => {
       state.transactionId = action.payload;
@@ -27,7 +23,6 @@ const paymentSlice = createSlice({
 export const {
   setTransactionSuccess,
   setTransactionFailed,
-  setTransactionInProgress,
   setTransactionId,
 } = paymentSlice.actions;
 

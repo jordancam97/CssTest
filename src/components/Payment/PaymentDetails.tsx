@@ -13,7 +13,7 @@ import {
   Fade,
   IconButton,
 } from "@mui/material";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import TaskAltRoundedIcon from "@mui/icons-material/TaskAltRounded";
 import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
 import { Close, ArrowBack } from "@mui/icons-material";
@@ -21,8 +21,10 @@ import { simulatePayment } from "./SimulatePayment.tsx";
 import {
   setTransactionSuccess,
   setTransactionFailed,
-  setTransactionInProgress,
   setTransactionId,
+  setSelectedSize,
+  setQuantity,
+  selectState,
   selectPayment,
 } from "./Actions/store.js";
 import { useDispatch, useSelector } from "react-redux";
@@ -36,12 +38,11 @@ interface FormData {
   };
 }
 
-const PaymentDetails = ({ quantity, handleClose, selectedSize }) => {
-  const totalAmount = quantity * 275;
-
-  const [cardNumber, setCardNumber] = useState("");
+const PaymentDetails = ({ handleClose }) => {
+   const [cardNumber, setCardNumber] = useState("");
   const [cardType, setCardType] = useState("card");
   const [isInputLabelVisible, setIsInputLabelVisible] = useState(false);
+  const [transactionInProgress, setTransactionInProgress] = useState(false)
 
   const generateTransactionId = () => {
     const characters =
@@ -71,9 +72,15 @@ const PaymentDetails = ({ quantity, handleClose, selectedSize }) => {
   const {
     transactionSuccess,
     transactionFailed,
-    transactionInProgress,
     transactionId,
   } = useSelector(selectPayment);
+
+  const {
+    selectedSize,
+    quantity
+  } = useSelector(selectState);
+
+  const totalAmount = quantity * 275;
 
   useEffect(() => {
     const storedData = localStorage.getItem("paymentData");
@@ -81,7 +88,6 @@ const PaymentDetails = ({ quantity, handleClose, selectedSize }) => {
       const parsedData = JSON.parse(storedData);
       dispatch(setTransactionSuccess(parsedData.transactionSuccess));
       dispatch(setTransactionFailed(parsedData.transactionFailed));
-      dispatch(setTransactionInProgress(parsedData.transactionInProgress));
       dispatch(setTransactionId(parsedData.transactionId));
     }
   }, [dispatch]);
@@ -90,19 +96,17 @@ const PaymentDetails = ({ quantity, handleClose, selectedSize }) => {
     const dataToStore = JSON.stringify({
       transactionSuccess,
       transactionFailed,
-      transactionInProgress,
       transactionId,
     });
     localStorage.setItem("paymentData", dataToStore);
   }, [
     transactionSuccess,
     transactionFailed,
-    transactionInProgress,
     transactionId,
   ]);
 
   const onSubmit = (data) => {
-    dispatch(setTransactionInProgress(true));
+    setTransactionInProgress(true);
 
     simulatePayment(data)
       .then((response) => {
@@ -110,20 +114,19 @@ const PaymentDetails = ({ quantity, handleClose, selectedSize }) => {
         const newTransactionId = generateTransactionId();
         dispatch(setTransactionId(newTransactionId));
         dispatch(setTransactionSuccess(true));
-        dispatch(setTransactionInProgress(false));
+        setTransactionInProgress(false);
         localStorage.removeItem("paymentData");
         localStorage.setItem("transactionId", newTransactionId);
       })
       .catch((error) => {
         console.error(error);
         dispatch(setTransactionFailed(true));
-        dispatch(setTransactionInProgress(false));
+        setTransactionInProgress(false);
       });
   };
 
   const handleRetry = () => {
     dispatch(setTransactionFailed(false));
-    reset();
   };
 
   const handleCardNumberChange = (event) => {
@@ -187,6 +190,9 @@ const PaymentDetails = ({ quantity, handleClose, selectedSize }) => {
     setTimeout(() => {
       dispatch(setTransactionSuccess(false));
       setIsInputLabelVisible(false);
+      dispatch(setSelectedSize(null));
+      dispatch(setQuantity(1));
+      localStorage.removeItem("allState");
       reset();
     }, 100);
   };
@@ -255,8 +261,8 @@ const PaymentDetails = ({ quantity, handleClose, selectedSize }) => {
           </Typography>
 
           <form onSubmit={handleSubmit(onSubmit)} className="columnRight_form">
-            <span>Air Max Plus 3 IronMan</span>
-            <Grid sx={{ fontSize: 12, lineHeight: "14px" }}>
+            <Typography sx={{display:{xs:"flex", sm:"none"}}}>Air Max Plus 3 IronMan</Typography>
+            <Grid sx={{ fontSize: 12, lineHeight: "14px", display:{xs:"flex", sm:"none"}, flexDirection:"column" }}>
               <span>
                 <strong>Size:</strong> {selectedSize}
               </span>

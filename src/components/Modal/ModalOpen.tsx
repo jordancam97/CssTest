@@ -76,9 +76,7 @@ const ModalOpen = ({ open, handleClose, selectedSize, quantity }) => {
               <Slide direction="right" in={true} timeout={500}>
                 <Grid item xs={12} sm={7} md={6} className="columnRight">
                   <PaymentDetails
-                    quantity={quantity}
                     handleClose={handleClose}
-                    selectedSize={selectedSize}
                   />
                 </Grid>
               </Slide>
