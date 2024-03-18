@@ -18,9 +18,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 
 const ProductPage = () => {
-  // const [modalOpen, setModalOpen] = useState(false);
   const [carouselOpen, setCarouselOpen] = useState(false);
-  // const [selectedSize, setSelectedSize] = useState<number | null>(null);
   const [statePay, setStatePay] = useState(false);
 
   const images = [

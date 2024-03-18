@@ -6,7 +6,7 @@ const simulatePayment = (data) => {
       } else {
         resolve({ success: true, message: "Successful payment" });
       }
-    }, 2000);
+    }, 1000);
   });
 };
 
