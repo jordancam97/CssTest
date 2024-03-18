@@ -65,7 +65,7 @@
 .columnRight_iconDeclined {
   animation: iconDeclined 0.8s ease-in-out;
   animation-fill-mode: forwards; 
-
+  margin: 33px 0px
 }
 
 @keyframes iconDeclined {
@@ -92,4 +92,5 @@
 .columnRight_iconSuccesful {
   animation: iconSuccesful 1s ease-in-out;
   animation-fill-mode: forwards; 
+  margin: 33px 0px
 }

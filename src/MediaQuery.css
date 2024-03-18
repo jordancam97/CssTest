@@ -63,4 +63,10 @@
     width: 276px !important;
     text-align: center;
   }
+  .columnRight_iconSuccesful {
+    margin: 0px
+  }
+  .columnRight_iconDeclined {
+    margin:  0px
+  }
 }
