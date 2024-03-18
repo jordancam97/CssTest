@@ -25,12 +25,12 @@ const ModalOpen = ({ open, handleClose, selectedSize, quantity }) => {
           }}
         >
           <Grid
-            style={{
+            sx={{
               width: 680,
-              height: 500,
+              height: { xs: "auto", lg: 500 },
               position: "relative",
+              padding: { xs: "26px", md: "0px" },
             }}
-            sx={{ padding: { xs: "26px", md: "0px" } }}
           >
             <Grid container sx={{ width: "100%", height: "100%" }}>
               <Fade in={open} timeout={1200}>
@@ -75,9 +75,7 @@ const ModalOpen = ({ open, handleClose, selectedSize, quantity }) => {
               </Fade>
               <Slide direction="right" in={true} timeout={500}>
                 <Grid item xs={12} sm={7} md={6} className="columnRight">
-                  <PaymentDetails
-                    handleClose={handleClose}
-                  />
+                  <PaymentDetails handleClose={handleClose} />
                 </Grid>
               </Slide>
             </Grid>
