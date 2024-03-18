@@ -32,6 +32,7 @@
   background: white;
   border-radius: 18px;
   padding: 46px;
+  overflow: auto;
 }
 
 .columnRight_form{
