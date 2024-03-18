@@ -300,7 +300,7 @@ const PaymentDetails = ({ handleClose }) => {
                 type="text"
                 inputProps={{
                   inputMode: "numeric",
-                  maxLength: 16,
+                  maxLength: cardType === "amex" ? 15 : 16,
                   ...register("cardNumber", {
                     required: "Card number is required*",
                     pattern: {
@@ -308,11 +308,11 @@ const PaymentDetails = ({ handleClose }) => {
                       message: "Card number entered is incorrect",
                     },
                     maxLength: {
-                      value: 16,
+                      value: cardType === "amex" ? 15 : 16,
                       message: "Card number must be exactly 16 digits",
                     },
                     minLength: {
-                      value: 16,
+                      value: cardType === "amex" ? 15 : 16,
                       message: "Card number must be exactly 16 digits",
                     },
                   }),
@@ -439,9 +439,7 @@ const PaymentDetails = ({ handleClose }) => {
                 <TextField
                   label="CVV"
                   variant="standard"
-                  fullWidth
-                  autoComplete="new-password"
-                  type="password"
+                  type="text"
                   inputProps={{
                     inputMode: "numeric",
                     maxLength: cardType === "amex" ? 4 : 3,
@@ -485,6 +483,7 @@ const PaymentDetails = ({ handleClose }) => {
                 {transactionInProgress ? "Processing..." : "Pay"}
               </Button>
             </div>
+            {transactionInProgress && <LinearProgress />}
           </form>
         </>
       )}
