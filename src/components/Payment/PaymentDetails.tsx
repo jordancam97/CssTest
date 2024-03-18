@@ -262,15 +262,13 @@ const PaymentDetails = ({ handleClose }) => {
 
           <form onSubmit={handleSubmit(onSubmit)} className="columnRight_form">
             <Typography sx={{display:{xs:"flex", sm:"none"}}}>Air Max Plus 3 IronMan</Typography>
-            <Grid sx={{ fontSize: 12, lineHeight: "14px", display:{xs:"flex", sm:"none"}, flexDirection:"column" }}>
-              <span>
+            <Grid sx={{ display:{xs:"flex", sm:"none"}, flexDirection:"column" }}>
+              <Typography sx={{fontSize: 12}}>
                 <strong>Size:</strong> {selectedSize}
-              </span>
-              <br />
-              <span>
+              </Typography>
+              <Typography sx={{fontSize: 12}}>
                 <strong>Quantity:</strong> {quantity}
-              </span>
-              <br />
+              </Typography>
             </Grid>
             <TextField
               label="Nombre"
