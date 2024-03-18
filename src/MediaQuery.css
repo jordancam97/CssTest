@@ -19,6 +19,7 @@
   .columnRight {
     padding: 28px !important;
     height: 100%;
+    overflow: auto;
   }
 }
 
@@ -38,6 +39,7 @@
 
   .columnRight {
     padding: 38px !important;
+    overflow: auto;
   }
 }
 
@@ -50,6 +52,9 @@
   .container_info {
     width: 276px !important;
     text-align: center;
+  }
+  .columnRight {
+    overflow: auto;
   }
 }
 
@@ -64,9 +69,13 @@
     text-align: center;
   }
   .columnRight_iconSuccesful {
-    margin: 0px
+    margin: 0px;
   }
   .columnRight_iconDeclined {
-    margin:  0px
+    margin: 0px;
+  }
+  .columnRight {
+    padding: 38px !important;
+    overflow: hidden;
   }
 }
