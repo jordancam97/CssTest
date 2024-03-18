@@ -42,7 +42,8 @@ const PaymentDetails = ({ handleClose }) => {
   const [cardNumber, setCardNumber] = useState("");
   const [cardType, setCardType] = useState("card");
   const [isInputLabelVisible, setIsInputLabelVisible] = useState(false);
-  const [transactionInProgress, setTransactionInProgress] = useState(false)
+  const [transactionInProgress, setTransactionInProgress] = useState(false);
+  const [isCardNumberCompleted, setIsCardNumberCompleted] = useState(false);
 
   const generateTransactionId = () => {
     const characters =
@@ -69,16 +70,10 @@ const PaymentDetails = ({ handleClose }) => {
   } = useForm<FormData>();
 
   const dispatch = useDispatch();
-  const {
-    transactionSuccess,
-    transactionFailed,
-    transactionId,
-  } = useSelector(selectPayment);
+  const { transactionSuccess, transactionFailed, transactionId } =
+    useSelector(selectPayment);
 
-  const {
-    selectedSize,
-    quantity
-  } = useSelector(selectState);
+  const { selectedSize, quantity } = useSelector(selectState);
 
   const totalAmount = quantity * 275;
 
@@ -99,11 +94,7 @@ const PaymentDetails = ({ handleClose }) => {
       transactionId,
     });
     localStorage.setItem("paymentData", dataToStore);
-  }, [
-    transactionSuccess,
-    transactionFailed,
-    transactionId,
-  ]);
+  }, [transactionSuccess, transactionFailed, transactionId]);
 
   const onSubmit = (data) => {
     setTransactionInProgress(true);
@@ -155,11 +146,30 @@ const PaymentDetails = ({ handleClose }) => {
         } else {
           setCardType(type);
         }
+
         return;
       }
     }
     setCardType("card");
   };
+
+  useEffect(() => {
+    const isAmex = cardType === "amex";
+    const isCardNumberCompleted = isAmex
+      ? cardNumber.length === 15
+      : cardNumber.length === 16;
+
+    setIsCardNumberCompleted(isCardNumberCompleted);
+  }, [cardNumber]);
+
+  useEffect(() => {
+    if (isCardNumberCompleted) {
+      const expiryMonthInput = document.getElementById("expiry-month-input");
+      if (expiryMonthInput) {
+        expiryMonthInput.focus();
+      }
+    }
+  }, [isCardNumberCompleted]);
 
   useEffect(() => {
     setValue("cvv", null);
@@ -191,7 +201,6 @@ const PaymentDetails = ({ handleClose }) => {
       reset();
     }, 100);
   };
-
 
   return (
     <>
@@ -256,12 +265,19 @@ const PaymentDetails = ({ handleClose }) => {
           </Typography>
 
           <form onSubmit={handleSubmit(onSubmit)} className="columnRight_form">
-            <Typography sx={{display:{xs:"flex", sm:"none"}}}>Air Max Plus 3 IronMan</Typography>
-            <Grid sx={{ display:{xs:"flex", sm:"none"}, flexDirection:"column" }}>
-              <Typography sx={{fontSize: 12}}>
+            <Typography sx={{ display: { xs: "flex", sm: "none" } }}>
+              Air Max Plus 3 IronMan
+            </Typography>
+            <Grid
+              sx={{
+                display: { xs: "flex", sm: "none" },
+                flexDirection: "column",
+              }}
+            >
+              <Typography sx={{ fontSize: 12 }}>
                 <strong>Size:</strong> {selectedSize}
               </Typography>
-              <Typography sx={{fontSize: 12}}>
+              <Typography sx={{ fontSize: 12 }}>
                 <strong>Quantity:</strong> {quantity}
               </Typography>
             </Grid>
@@ -338,7 +354,9 @@ const PaymentDetails = ({ handleClose }) => {
                 </FormHelperText>
               )}
             </FormControl>
-            <Grid sx={{ display: "flex", flexDirection: "row", marginTop:"6px" }}>
+            <Grid
+              sx={{ display: "flex", flexDirection: "row", marginTop: "6px" }}
+            >
               <Grid xs={8} mr={2} mt={"-6px"}>
                 <InputLabel
                   htmlFor="card expiry"
@@ -363,10 +381,13 @@ const PaymentDetails = ({ handleClose }) => {
                         validMonth: (value) => {
                           const monthNumber = parseInt(value);
                           const currentYearLastTwoDigits = currentYear % 100;
-                  
-                          if (isNaN(monthNumber)) return false; 
-                  
-                          if (parseInt(watch("expiry.year")) === currentYearLastTwoDigits) {
+
+                          if (isNaN(monthNumber)) return false;
+
+                          if (
+                            parseInt(watch("expiry.year")) ===
+                            currentYearLastTwoDigits
+                          ) {
                             return monthNumber > currentMonth;
                           } else {
                             return true;
@@ -385,10 +406,21 @@ const PaymentDetails = ({ handleClose }) => {
                         inputProps={{
                           maxLength: 2,
                           style: { textAlign: "center" },
+                          id: "expiry-month-input",
                         }}
                         placeholder="MM"
                         onFocus={handleInputFocus}
                         onBlur={handleInputBlur}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          if (e.target.value.length === 2) {
+                            const expiryYearInput =
+                              document.getElementById("expiry-year-input");
+                            if (expiryYearInput) {
+                              expiryYearInput.focus();
+                            }
+                          }
+                        }}
                       />
                     )}
                   />
@@ -420,10 +452,21 @@ const PaymentDetails = ({ handleClose }) => {
                           maxLength: 2,
                           min: currentYear,
                           style: { textAlign: "center" },
+                          id: "expiry-year-input",
                         }}
                         placeholder="YY"
                         onFocus={handleInputFocus}
                         onBlur={handleInputBlur}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          if (e.target.value.length === 2) {
+                            const cvvInput =
+                              document.getElementById("cvv-input");
+                            if (cvvInput) {
+                              cvvInput.focus();
+                            }
+                          }
+                        }}
                       />
                     )}
                   />
@@ -443,6 +486,7 @@ const PaymentDetails = ({ handleClose }) => {
                   variant="standard"
                   type="text"
                   inputProps={{
+                    id: "cvv-input",
                     inputMode: "numeric",
                     maxLength: cardType === "amex" ? 4 : 3,
                     ...register("cvv", {
@@ -466,7 +510,7 @@ const PaymentDetails = ({ handleClose }) => {
                 />
               </Grid>
             </Grid>
-            <Typography sx={{ color: "#392c00", marginTop:"15px"}}>
+            <Typography sx={{ color: "#392c00", marginTop: "15px" }}>
               Payment Amount: US$ <strong>{totalAmount}</strong>
             </Typography>
             <div
