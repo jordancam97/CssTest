@@ -104,7 +104,7 @@ const ProductPage = () => {
       mt={0}
       className="container"
       spacing={2}
-      sx={{ height: { sm:"100vh",md: "calc(100vh - 70px)" } }}
+      sx={{ height: { sm:"calc(100vh + 250px)",md: "calc(100vh - 70px)" } }}
     >
       <ModalOpen
         open={modalOpen}
