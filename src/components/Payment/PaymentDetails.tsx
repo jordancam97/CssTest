@@ -39,7 +39,7 @@ interface FormData {
 }
 
 const PaymentDetails = ({ handleClose }) => {
-   const [cardNumber, setCardNumber] = useState("");
+  const [cardNumber, setCardNumber] = useState("");
   const [cardType, setCardType] = useState("card");
   const [isInputLabelVisible, setIsInputLabelVisible] = useState(false);
   const [transactionInProgress, setTransactionInProgress] = useState(false)
@@ -165,11 +165,6 @@ const PaymentDetails = ({ handleClose }) => {
     setValue("cvv", null);
     clearErrors("cvv");
   }, [watch("cardNumber")]);
-
-  const isMonthValid = (value: string) => {
-    const monthNumber = parseInt(value);
-    return !isNaN(monthNumber) && monthNumber >= 1 && monthNumber <= 12;
-  };
 
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth() + 1;
