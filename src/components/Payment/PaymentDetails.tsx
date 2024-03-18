@@ -365,11 +365,18 @@ const PaymentDetails = ({ handleClose }) => {
                     rules={{
                       required: "Month is required",
                       validate: {
-                        validMonth: (value) =>
-                          isMonthValid(value) || "Invalid month",
-                        futureMonth: (value) =>
-                          parseInt(value) > currentMonth ||
-                          "Expiry month should be in the future",
+                        validMonth: (value) => {
+                          const monthNumber = parseInt(value);
+                          const currentYearLastTwoDigits = currentYear % 100;
+                  
+                          if (isNaN(monthNumber)) return false; 
+                  
+                          if (parseInt(watch("expiry.year")) === currentYearLastTwoDigits) {
+                            return monthNumber > currentMonth;
+                          } else {
+                            return true;
+                          }
+                        },
                       },
                       minLength: 2,
                       maxLength: 2,
