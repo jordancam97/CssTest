@@ -19,4 +19,3 @@ To run the application locally, follow these steps:
 
 This application is deployed on an AWS server. You can access it at the following URL:
 
-[Developer test - AWS Server](https://main.d1ikteyucqqxgl.amplifyapp.com/)
